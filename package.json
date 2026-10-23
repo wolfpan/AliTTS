@@ -1,0 +1,20 @@
+{
+  "name": "alitts",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AliTTS 语音合成工作台（本机/内网）：百炼 DashScope 为主通道，OpenRouter 为备份",
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,green \"node server/index.js\" \"npm --prefix web run dev\"",
+    "build": "npm --prefix web run build",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

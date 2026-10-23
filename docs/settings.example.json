@@ -1,0 +1,19 @@
+{
+  "dashscope": {
+    "apiKey": "sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "region": "cn-beijing",
+    "domainMode": "public",
+    "workspaceId": ""
+  },
+  "preferences": {
+    "defaultFormat": "mp3",
+    "defaultSampleRate": 24000,
+    "theme": "auto",
+    "chunkLimit": 600
+  },
+  "server": {
+    "port": 3210,
+    "lan": false,
+    "accessToken": ""
+  }
+}
