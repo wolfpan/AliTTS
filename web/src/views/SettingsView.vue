@@ -56,12 +56,24 @@ const pendingRestart = computed(() => Boolean(settingsStore.view.server.pendingR
 const tokenSet = computed(() => Boolean(settingsStore.view.server.accessTokenSet));
 
 async function copyText(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-    message.success('已复制');
-  } catch {
-    message.error('复制失败，请手动选择复制');
+  // Clipboard API 仅在 HTTPS 或 127.0.0.1 可用；局域网 HTTP 环境回退 execCommand
+  if (window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(text);
+      message.success('已复制');
+      return;
+    } catch { /* 落入兜底 */ }
   }
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  const ok = document.execCommand('copy');
+  document.body.removeChild(ta);
+  if (ok) message.success('已复制');
+  else message.error('复制失败，请手动选择复制');
 }
 
 async function save(opts?: { quiet?: boolean }) {
