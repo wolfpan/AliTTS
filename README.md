@@ -85,6 +85,34 @@ npm run dev        # 前端 http://127.0.0.1:5173，API 代理到 3210
 
 > ⚠️ 本项目面向**本机/内网**场景，未做公网防护（无 HTTPS、无用户体系）。请勿直接暴露到公网。忘记访问令牌时，编辑本机 `data/settings.json` 清空 `server.accessToken` 即可。
 
+## 服务器部署与更新（GitHub 拉取 + PM2 守护）
+
+```bash
+# 服务器上（首次部署；无 sudo 时 pm2 装到用户目录）
+npm config set prefix ~/.npm-global
+npm install -g pm2
+echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
+
+git clone https://github.com/wolfpan/AliTTS.git ~/aliTTS
+cd ~/aliTTS
+npm install && npm --prefix web install && npm run build
+mkdir -p data   # 配置 API Key：复制本机 data/settings.json 过来，或首次浏览器访问走向导
+pm2 start server/index.js --name alitts
+pm2 save
+```
+
+**日常更新**（本地 → GitHub → 服务器）：
+
+```bash
+# 本地：推送
+git push
+
+# 服务器：一键拉取 + 重建 + 重启（脚本已入库）
+cd ~/aliTTS && bash deploy/update.sh
+```
+
+> 服务器上若要让局域网/VPN 设备访问，把 `data/settings.json` 的 `server.lan` 设为 `true` 并 `pm2 restart alitts`；建议同时设置访问令牌。开机自启需执行一次 `pm2 startup`（按提示以 sudo 运行其输出的命令）后 `pm2 save`。
+
 ## 目录结构
 
 ```
